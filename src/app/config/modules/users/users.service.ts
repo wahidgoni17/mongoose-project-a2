@@ -18,6 +18,29 @@ const getAUserFromDB = async (id: string) => {
   return result;
 };
 
+const getAllOrdersOfAUserFromDb = async (userId: string) => {
+  const result = await User.findOne({ userId }).select("orders");
+  return result;
+};
+
+const getTotalPriceOfAUserOrdersFromDb = async (userId: number) => {
+  const user = await User.findOne({ userId });
+  
+  if (!user) {
+    return 0;
+  }
+
+  let result = 0;
+
+  if (user.orders) {
+    user.orders.forEach((order) => {
+      const orderPrice = order.price * order.quantity;
+      result += orderPrice;
+    });
+  }
+  return result;
+};
+
 const updateUserFromDB = async (id: string, updateData: TUser) => {
   const options = { new: true };
   const result = await User.findOneAndUpdate(
@@ -38,6 +61,8 @@ export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getAUserFromDB,
+  getAllOrdersOfAUserFromDb,
+  getTotalPriceOfAUserOrdersFromDb,
   updateUserFromDB,
   deleteUserFromDB,
 };
