@@ -30,7 +30,7 @@ const AddressSchemaValidation = z.object({
 });
 
 export const UserSchemaValidation = z.object({
-  userName: z.string().max(20).min(5),
+  username: z.string().max(20).min(5),
   userId: z.number().int(),
   fullName: FullNameSchemaValidation,
   password: z.string().max(20),

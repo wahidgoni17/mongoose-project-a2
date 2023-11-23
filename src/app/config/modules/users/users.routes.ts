@@ -5,4 +5,12 @@ const router = Router();
 
 router.post("/", UserControllers.createAUser);
 
-export const UserRoutes = router
+router.get("/", UserControllers.getAllUsers);
+
+router.get("/:userId", UserControllers.getAUser);
+
+router.put("/:userId", UserControllers.updateAUser);
+
+router.delete("/:userId", UserControllers.deleteAUser);
+
+export const UserRoutes = router;

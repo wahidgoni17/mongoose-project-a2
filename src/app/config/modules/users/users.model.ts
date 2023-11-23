@@ -43,7 +43,7 @@ const OrdersSchema = new Schema<TOrders>({
 });
 
 const UserSchema = new Schema<TUser>({
-  userName: {
+  username: {
     type: String,
     required: true,
     maxlength: 20,
