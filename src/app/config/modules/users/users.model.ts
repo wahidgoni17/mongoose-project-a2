@@ -1,5 +1,11 @@
 import { Schema, model } from "mongoose";
-import { TAddress, TFullName, TOrders, TUser } from "./users.interface";
+import {
+  TAddress,
+  TFullName,
+  TOrders,
+  TUser,
+  UserModel,
+} from "./users.interface";
 import bcrypt from "bcrypt";
 import config from "../..";
 
@@ -84,16 +90,20 @@ const UserSchema = new Schema<TUser>({
   },
 });
 
+// encoding password
 UserSchema.pre("save", async function (next) {
-  // hashing password and save into db
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
+  this.password = await bcrypt.hash(
+    this.password,
     Number(config.bcrypt_salt_round)
   );
   next();
 });
 
-const User = model<TUser>("User", UserSchema);
+// using static method to find user
+UserSchema.statics.isUserExists = async function (userId: string) {
+  const userExistence = await User.findOne({ userId });
+  return userExistence;
+};
+
+const User = model<TUser, UserModel>("User", UserSchema);
 export default User;

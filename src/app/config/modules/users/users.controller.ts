@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserSchemaValidation } from "./users.validation";
 import { UserServices } from "./users.service";
+import User from "./users.model";
 
 const createAUser = async (req: Request, res: Response) => {
   try {
@@ -61,6 +62,16 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getAUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    if (!(await User.isUserExists(userId))) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
     const result = await UserServices.getAUserFromDB(userId);
     res.status(200).json({
       success: true,
@@ -80,6 +91,16 @@ const updateAUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const { user: updateData } = req.body;
+    if (!(await User.isUserExists(userId))) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
     const result = await UserServices.updateUserFromDB(userId, updateData);
     res.status(200).json({
       success: true,
@@ -97,6 +118,16 @@ const updateAUser = async (req: Request, res: Response) => {
 const deleteAUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    if (!(await User.isUserExists(userId))) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
     await UserServices.deleteUserFromDB(userId);
     res.status(200).json({
       success: true,
