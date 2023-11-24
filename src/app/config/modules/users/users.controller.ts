@@ -176,6 +176,35 @@ const updateAUser = async (req: Request, res: Response) => {
     });
   }
 };
+
+const updateProductOfAUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { product } = req.body;
+    if (!(await User.isUserExists(userId))) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
+    await UserServices.updateProductOfAUserFromDB(userId, product);
+    res.status(200).json({
+      success: true,
+      message: "Order Created successfully!",
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "things just got out off hand",
+      error,
+    });
+  }
+};
 const deleteAUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -211,5 +240,6 @@ export const UserControllers = {
   getAllOrdersOfAUser,
   getTotalPriceOfAUserOrders,
   updateAUser,
+  updateProductOfAUser,
   deleteAUser,
 };
