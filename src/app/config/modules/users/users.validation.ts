@@ -30,13 +30,34 @@ const AddressSchemaValidation = z.object({
 });
 
 export const UserSchemaValidation = z.object({
-  username: z.string().max(20).min(5),
-  userId: z.number().int(),
+  username: z
+    .string({
+      required_error: "username is required",
+      invalid_type_error: "username must be a string",
+    })
+    .max(20)
+    .min(5),
+  userId: z
+    .number({
+      required_error: "userId is required",
+      invalid_type_error: "userId must be a number",
+    })
+    .int(),
   fullName: FullNameSchemaValidation,
-  password: z.string().max(20),
+  password: z
+    .string({
+      required_error: "password is required",
+      invalid_type_error: "password must be a string",
+    })
+    .max(20),
   address: AddressSchemaValidation,
   age: z.number().int().positive(),
-  email: z.string().email(),
+  email: z
+    .string({
+      required_error: "email is required",
+      invalid_type_error: "email must be a string",
+    })
+    .email(),
   hobbies: z.array(z.string().min(3)).min(1),
   isActive: z.boolean(),
   orders: z.array(OrdersSchemaValidation).optional(),
